@@ -1,0 +1,10 @@
+{
+  "ports": [
+    { "port": 8000, "protocol": "TCP", "action": "kill", "allow": ["python", "node"] },
+    { "port": 5173, "protocol": "TCP", "action": "warn", "allow": ["node"] },
+    { "port": 3000, "protocol": "TCP", "action": "kill", "allow": [] }
+  ],
+  "graceSeconds": 3,
+  "force": false,
+  "logPath": "logs/port-warden.log"
+}
