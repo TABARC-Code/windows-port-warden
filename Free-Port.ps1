@@ -58,7 +58,7 @@ foreach ($processId in $uniquePids) {
         Write-Host "Stopped: $name (PID $processId)"
       }
     } catch {
-      Write-Error "Failed to stop PID $processId: $($_.Exception.Message)"
+      Write-Error "Failed to stop PID $($processId): $($_.Exception.Message)"
     }
   }
 }
