@@ -57,7 +57,7 @@ foreach ($p in $c.ports) {
 
   $bad = @()
   foreach ($o in $owners) {
-    $pn = ($o.Process ?? 'unknown').ToString().ToLowerInvariant()
+    $pn = $(if ($o.Process) { $o.Process } else { 'unknown' }).ToString().ToLowerInvariant()
     if ($allow -contains $pn) {
       Write-Log "Port $port/$proto owned by allowed process: $($o.Process) (PID $($o.PID))" 'INFO'
     } else {
