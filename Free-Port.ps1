@@ -30,16 +30,16 @@ if ($owners.Count -eq 0) {
 }
 
 $uniquePids = $owners | Select-Object -ExpandProperty PID -Unique
-foreach ($pid in $uniquePids) {
-  $p = Get-Process -Id ([int]$pid) -ErrorAction SilentlyContinue
+foreach ($processId in $uniquePids) {
+  $p = Get-Process -Id ([int]$processId) -ErrorAction SilentlyContinue
   $name = if ($p) { $p.ProcessName } else { 'Unknown' }
 
   if (-not $p) {
-    Write-Host "PID $pid vanished. Good riddance."
+    Write-Host "PID $processId vanished. Good riddance."
     continue
   }
 
-  $msg = "Stopping $name (PID $pid) to free port $Port"
+  $msg = "Stopping $name (PID $processId) to free port $Port"
   if ($PSCmdlet.ShouldProcess($msg)) {
     try {
       # First try a polite stop.
@@ -50,15 +50,15 @@ foreach ($pid in $uniquePids) {
       if ($still) {
         if ($Force) {
           Stop-Process -Id $p.Id -Force -ErrorAction SilentlyContinue
-          Write-Host "Forced stop: $name (PID $pid)"
+          Write-Host "Forced stop: $name (PID $processId)"
         } else {
-          Write-Host "Still running after $GraceSeconds s: $name (PID $pid). Use -Force if you mean it."
+          Write-Host "Still running after $GraceSeconds s: $name (PID $processId). Use -Force if you mean it."
         }
       } else {
-        Write-Host "Stopped: $name (PID $pid)"
+        Write-Host "Stopped: $name (PID $processId)"
       }
     } catch {
-      Write-Error "Failed to stop PID $pid: $($_.Exception.Message)"
+      Write-Error "Failed to stop PID $processId: $($_.Exception.Message)"
     }
   }
 }
