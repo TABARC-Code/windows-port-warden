@@ -16,11 +16,11 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
 function Get-ProcName {
-  param([int]$Pid)
+  param([int]$ProcessId)
   try {
-    (Get-Process -Id $Pid -ErrorAction Stop).ProcessName
+    (Get-Process -Id $ProcessId -ErrorAction Stop).ProcessName
   } catch {
-    "PID:$Pid"
+    "PID:$ProcessId"
   }
 }
 
@@ -30,7 +30,7 @@ function Add-Row {
     [string]$Local,
     [string]$Remote,
     [string]$State,
-    [int]$Pid
+    [int]$ProcessId
   )
 
   $script:rows += [pscustomobject]@{
@@ -38,8 +38,8 @@ function Add-Row {
     Local    = $Local
     Remote   = $Remote
     State    = $State
-    PID      = $Pid
-    Process  = (Get-ProcName -Pid $Pid)
+    PID      = $ProcessId
+    Process  = (Get-ProcName -ProcessId $ProcessId)
   }
 }
 
@@ -58,7 +58,7 @@ if ($wantTcp) {
     foreach ($c in $tcp) {
       $local  = "{0}:{1}" -f $c.LocalAddress, $c.LocalPort
       $remote = "{0}:{1}" -f $c.RemoteAddress, $c.RemotePort
-      Add-Row -Proto 'TCP' -Local $local -Remote $remote -State $c.State -Pid $c.OwningProcess
+      Add-Row -Proto 'TCP' -Local $local -Remote $remote -State $c.State -ProcessId $c.OwningProcess
     }
   } catch {
     $usedFallback = $true
@@ -70,7 +70,7 @@ if ($wantUdp) {
     $udp = Get-NetUDPEndpoint -LocalPort $Port -ErrorAction Stop
     foreach ($u in $udp) {
       $local = "{0}:{1}" -f $u.LocalAddress, $u.LocalPort
-      Add-Row -Proto 'UDP' -Local $local -Remote '' -State 'Listen' -Pid $u.OwningProcess
+      Add-Row -Proto 'UDP' -Local $local -Remote '' -State 'Listen' -ProcessId $u.OwningProcess
     }
   } catch {
     $usedFallback = $true
@@ -108,7 +108,7 @@ if ($usedFallback -and $rows.Count -eq 0) {
         $pid = [int]$t[3]
       }
 
-      Add-Row -Proto $proto -Local $local -Remote $remote -State $state -Pid $pid
+      Add-Row -Proto $proto -Local $local -Remote $remote -State $state -ProcessId $pid
     }
   } catch {
     # If this fails too, you're in a special kind of Windows day.
