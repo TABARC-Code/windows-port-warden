@@ -23,7 +23,7 @@ function Get-Owners {
   return @($rows)
 }
 
-$owners = Get-Owners
+$owners = @(Get-Owners)
 if ($owners.Count -eq 0) {
   Write-Host "Port $Port looks free already. Fine."
   exit 0
@@ -64,7 +64,7 @@ foreach ($processId in $uniquePids) {
 }
 
 # Final check
-$after = Get-Owners
+$after = @(Get-Owners)
 if ($after.Count -eq 0) {
   Write-Host "Port $Port now appears free."
 } else {
