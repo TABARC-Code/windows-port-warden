@@ -115,7 +115,7 @@ if ($usedFallback -and $rows.Count -eq 0) {
   }
 }
 
-$rows = $rows | Sort-Object Protocol, Local, PID -Unique
+$rows = @($rows | Sort-Object Protocol, Local, PID -Unique)
 
 if ($Json) {
   $rows | ConvertTo-Json -Depth 4
