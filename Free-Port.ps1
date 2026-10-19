@@ -16,7 +16,7 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
 function Get-Owners {
-  $json = & "$PSScriptRoot\Who-Owns-Port.ps1" -Port $Port -Protocol $Protocol -Json
+  $json = & "$PSScriptRoot\Who-Owns-Port.ps1" -Port $Port -Protocol $Protocol -ListenOnly -Json
   $rows = $json | ConvertFrom-Json
   if (-not $rows) { return @() }
   if ($rows -is [System.Array]) { return $rows }
